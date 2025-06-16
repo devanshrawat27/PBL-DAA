@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard | Ambulance Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-color: #b71c1c;
+            --secondary-color: #d32f2f;
+            --accent-color: #c62828;
+            --light-color: #fff8f8;
+            --text-color: #2c2c2c;
+            --card-bg: #ffffff;
+            --light-gray: #fef2f2;
+            --medium-gray: #ddd;
+            --dark-gray: #5e5e5e;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .driver-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-onduty {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-busy {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .map-container {
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--primary-color);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .btn-secondary:hover {
+            background: var(--medium-gray);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .status-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .emergency-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(183, 28, 28, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .emergency-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .call-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .call-button:hover {
+            text-decoration: underline;
+        }
+
+        .patient-details {
+            margin-top: 15px;
+        }
+
+        .no-emergency {
+            text-align: center;
+            padding: 30px;
+            color: var(--dark-gray);
+        }
+
+        .no-emergency i {
+            font-size: 2rem;
+            color: var(--medium-gray);
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .history-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-time {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 5px;
+        }
+
+        .history-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .history-desc {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">Ambulance Tracker</div>
+        <div class="driver-info">
+            <span>Ambulance DL-01-AB-1234</span>
+            <div class="driver-avatar">
+                <i class="fas fa-ambulance"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="dashboard-title">
+            <i class="fas fa-tachometer-alt"></i>
+            Driver Dashboard
+            <span class="status-badge status-available">Available</span>
+        </h1>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Live Tracking
+                </h2>
+                <div class="map-container">
+                    <div id="map"></div>
+                    <div class="map-overlay" id="mapOverlay">GPS Tracking Active</div>
+                </div>
+                <div class="status-controls">
+                    <button class="btn btn-primary" id="startTripBtn">
+                        <i class="fas fa-play"></i> Start Trip
+                    </button>
+                    <button class="btn btn-secondary" id="updateLocationBtn">
+                        <i class="fas fa-sync-alt"></i> Update Location
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Current Emergency
+                </h2>
+                <div id="currentEmergency">
+                    <div class="no-emergency">
+                        <i class="fas fa-bed"></i>
+                        <h3>No Active Emergency</h3>
+                        <p>You will be notified when assigned to an emergency</p>
+                    </div>
+                    <!-- Emergency details would be inserted here when active -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Status Controls
+                </h2>
+                <div class="status-controls">
+                    <button class="btn btn-primary status-available" id="availableBtn">
+                        <i class="fas fa-check-circle"></i> Available
+                    </button>
+                    <button class="btn btn-secondary status-onduty" id="onDutyBtn">
+                        <i class="fas fa-ambulance"></i> On Duty
+                    </button>
+                    <button class="btn btn-danger status-busy" id="busyBtn">
+                        <i class="fas fa-times-circle"></i> Busy
+                    </button>
+                </div>
+                <div class="emergency-info">
+                    <h3>
+                        <i class="fas fa-info-circle"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-hospital"></i> Notify Hospital
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-route"></i> Optimize Route
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-history"></i>
+                    Recent Activity
+                </h2>
+                <div id="recentActivity">
+                    <div class="history-item">
+                        <div class="history-time">Today, 10:30 AM</div>
+                        <div class="history-title">Status Changed to Available</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-time">Today, 09:45 AM</div>
+                        <div class="history-title">Completed Emergency #EM-2023-1256</div>
+                        <div class="history-desc">Patient transported to City General Hospital</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-time">Today, 08:15 AM</div>
+                        <div class="history-title">Assigned to Emergency #EM-2023-1256</div>
+                        <div class="history-desc">Road accident near Central Park</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS for maps -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        const map = L.map('map').setView([12.9716, 77.5946], 13);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add driver marker
+        const driverMarker = L.marker([12.9716, 77.5946], {
+            icon: L.divIcon({
+                className: 'driver-marker',
+                html: '<div style="background-color: #b71c1c; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-ambulance" style="font-size: 14px;"></i></div>',
+                iconSize: [30, 30]
+            })
+        }).addTo(map);
+        driverMarker.bindPopup("<b>Your Location</b>").openPopup();
+
+        // Simulate receiving a new emergency
+        function simulateNewEmergency() {
+            const emergencyDetails = `
+                <div class="emergency-info">
+                    <h3>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Emergency #EM-2023-1298
+                    </h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Emergency Type</div>
+                            <div class="info-value">Road Accident</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Location</div>
+                            <div class="info-value">MG Road, Bangalore</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Distance</div>
+                            <div class="info-value">2.3 km</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">ETA</div>
+                            <div class="info-value">8 minutes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="patient-details">
+                        <div class="info-label">Patient Details</div>
+                        <div class="info-value">Male, 35 years, suspected leg fracture</div>
+                    </div>
+                    
+                    <div class="action-buttons" style="margin-top: 15px;">
+                        <button class="btn btn-primary" id="acceptEmergencyBtn">
+                            <i class="fas fa-check"></i> Accept Emergency
+                        </button>
+                        <a href="tel:+911234567890" class="call-button">
+                            <i class="fas fa-phone"></i> Call Patient
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('currentEmergency').innerHTML = emergencyDetails;
+            
+            // Add destination marker
+            const destinationMarker = L.marker([12.9816, 77.6046], {
+                icon: L.divIcon({
+                    className: 'destination-marker',
+                    html: '<div style="background-color: #2ecc71; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-crosshairs" style="font-size: 14px;"></i></div>',
+                    iconSize: [30, 30]
+                })
+            }).addTo(map);
+            destinationMarker.bindPopup("<b>Emergency Location</b>");
+            
+            // Draw route
+            const route = L.polyline(
+                [[12.9716, 77.5946], [12.9816, 77.6046]],
+                {color: '#b71c1c', weight: 3}
+            ).addTo(map);
+            
+            // Fit map to show both points
+            map.fitBounds([
+                [12.9716, 77.5946],
+                [12.9816, 77.6046]
+            ]);
+        }
+
+        // Status control buttons
+        document.getElementById('availableBtn').addEventListener('click', function() {
+            document.querySelector('.status-badge').className = 'status-badge status-available';
+            document.querySelector('.status-badge').textContent = 'Available';
+        });
+        
+        document.getElementById('onDutyBtn').addEventListener('click', function() {
+            document.querySelector('.status-badge').className = 'status-badge status-onduty';
+            document.querySelector('.status-badge').textContent = 'On Duty';
+        });
+        
+        document.getElementById('busyBtn').addEventListener('click', function() {
+            document.querySelector('.status-badge').className = 'status-badge status-busy';
+            document.querySelector('.status-badge').textContent = 'Busy';
+        });
+
+        // Start trip button
+        document.getElementById('startTripBtn').addEventListener('click', function() {
+            simulateNewEmergency();
+        });
+
+        // Update location button
+        document.getElementById('updateLocationBtn').addEventListener('click', function() {
+            // In a real app, this would get the current GPS location
+            const newLat = 12.9716 + (Math.random() * 0.01 - 0.005);
+            const newLng = 77.5946 + (Math.random() * 0.01 - 0.005);
+            driverMarker.setLatLng([newLat, newLng]);
+            driverMarker.bindPopup("<b>Your Location</b>").openPopup();
+            map.panTo([newLat, newLng]);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ambulance Tracking System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+   <style>
+    :root {
+      --primary-color: #b71c1c;
+      --secondary-color: #d32f2f;
+      --accent-color: #c62828;
+      --light-color: #fff8f8;
+      --text-color: #2c2c2c;
+      --card-bg: #ffffff;
+      --primary-blue: #d32f2f;
+      --dark-blue: #b71c1c;
+      --light-gray: #fef2f2;
+      --medium-gray: #ddd;
+      --dark-gray: #5e5e5e;
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header {
+      margin-bottom: 40px;
+    }
+
+    .project-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .subject-title {
+      font-size: 1.3rem;
+      color: var(--accent-color);
+      font-weight: 500;
+      margin-bottom: 30px;
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: rgba(183, 28, 28, 0.1);
+      border-radius: 20px;
+    }
+
+    .auth-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin: 40px 0;
+    }
+
+    .emergency-button {
+      background: #f44336;
+      color: white;
+      padding: 14px 32px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 12px;
+      text-decoration: none;
+      box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .emergency-button:hover {
+      background: #c62828;
+      box-shadow: 0 8px 25px rgba(198, 40, 40, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .auth-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+      padding: 12px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      background: var(--dark-blue);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    /* Section Styling */
+    .section {
+      margin: 60px 0;
+      padding: 30px 0;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background-color: var(--accent-color);
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .member-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border-top: 4px solid var(--primary-color);
+    }
+
+    .member-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .member-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    /* Features Section */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+    }
+
+    .feature-desc {
+      color: var(--dark-gray);
+      font-size: 0.95rem;
+    }
+
+    /* Emergency Numbers Modal Styles */
+    .emergency-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .emergency-content {
+      background-color: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: modalFadeIn 0.3s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .emergency-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .emergency-header h2 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark-gray);
+    }
+
+    .emergency-list {
+      text-align: left;
+      list-style-type: none;
+    }
+
+    .emergency-item {
+      padding: 12px 15px;
+      margin-bottom: 10px;
+      background-color: var(--light-gray);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .emergency-item:hover {
+      background-color: #f8d7da;
+    }
+
+    .emergency-number {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .emergency-number:hover {
+      text-decoration: underline;
+    }
+
+    .emergency-icon {
+      margin-right: 10px;
+      color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+      .project-title {
+        font-size: 2rem;
+      }
+      
+      .section-title {
+        font-size: 1.5rem;
+      }
+      
+      .team-grid,
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .btn-primary,
+      .btn-secondary,
+      .emergency-button {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .emergency-content {
+        width: 95%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="project-title">Ambulance Tracking and Emergency Routing</h1>
+      <div class="subject-title">Project Based Learning DAA</div>
+    </header>
+
+    <div class="auth-section">
+      <button class="emergency-button" id="emergencyBtn"><i class="fas fa-phone-alt"></i> Emergency Call</button>
+      <div class="auth-buttons">
+        <a href="signup.ejs" class="btn-secondary"><i class="fas fa-user-plus"></i> Sign Up</a>
+        <a href="adminlogin.ejs" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
+      </div>
+    </div>
+     <section class="section">
+    <h2 class="section-title">Meet the Team - The Life Saviours</h2>
+    <div class="team-grid">
+      <div class="member-card">
+        <div class="member-name">Anuj Kumar</div>
+      </div>
+      <div class="member-card">
+        <div class="member-name">Devansh Rawat</div>
+      </div>
+      <div class="member-card">
+        <div class="member-name">Harri Agarawal</div>
+      </div>
+      <div class="member-card">
+        <div class="member-name">Akanksha Negi</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Key Functionalities</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="feature-title">Live Ambulance Location</div>
+        <div class="feature-desc">Track ambulances in real-time with precise geo-location updates.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-traffic-light"></i></div>
+        <div class="feature-title">Emergency Route Optimization</div>
+        <div class="feature-desc">Dynamic routing to ensure the fastest path avoiding traffic congestion.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-hospital-user"></i></div>
+        <div class="feature-title">Hospital Notification</div>
+        <div class="feature-desc">Notify nearest hospitals before patient arrival for faster treatment.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="feature-title">Secure Admin Panel</div>
+        <div class="feature-desc">Manage ambulance availability and routes with secure access control.</div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Emergency Numbers Modal -->
+    <div class="emergency-modal" id="emergencyModal">
+      <div class="emergency-content">
+        <div class="emergency-header">
+          <h2>Emergency Services</h2>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
+        <ul class="emergency-list">
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-ambulance emergency-icon"></i>
+              <span>Ambulance</span>
+            </div>
+            <a href="tel:102" class="emergency-number">102</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-fire emergency-icon"></i>
+              <span>Fire Brigade</span>
+            </div>
+            <a href="tel:101" class="emergency-number">101</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-shield-alt emergency-icon"></i>
+              <span>Police</span>
+            </div>
+            <a href="tel:100" class="emergency-number">100</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-phone-alt emergency-icon"></i>
+              <span>Disaster Management</span>
+            </div>
+            <a href="tel:108" class="emergency-number">108</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-female emergency-icon"></i>
+              <span>Women Helpline</span>
+            </div>
+            <a href="tel:1091" class="emergency-number">1091</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-child emergency-icon"></i>
+              <span>Child Helpline</span>
+            </div>
+            <a href="tel:1098" class="emergency-number">1098</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-paw emergency-icon"></i>
+              <span>Animal Welfare</span>
+            </div>
+            <a href="tel:1962" class="emergency-number">1962</a>
+          </li>
+          <li class="emergency-item">
+            <div>
+              <i class="fas fa-heartbeat emergency-icon"></i>
+              <span>COVID Helpline</span>
+            </div>
+            <a href="tel:1075" class="emergency-number">1075</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Emergency Modal Functionality
+    const emergencyBtn = document.getElementById('emergencyBtn');
+    const emergencyModal = document.getElementById('emergencyModal');
+    const closeModal = document.getElementById('closeModal');
+
+    // Show modal when emergency button is clicked
+    emergencyBtn.addEventListener('click', function() {
+      emergencyModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    });
+
+    // Close modal when X button is clicked
+    closeModal.addEventListener('click', function() {
+      emergencyModal.style.display = 'none';
+      document.body.style.overflow = 'auto'; // Re-enable scrolling
+    });
+
+    // Close modal when clicking outside the content
+    window.addEventListener('click', function(event) {
+      if (event.target === emergencyModal) {
+        emergencyModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+
+    // All emergency numbers will automatically initiate calls when clicked
+    // because they use the tel: protocol in their href attributes
+  </script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | Ambulance Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #b71c1c;
+            --secondary-color: #d32f2f;
+            --accent-color: #c62828;
+            --light-color: #fff8f8;
+            --text-color: #2c2c2c;
+            --card-bg: #ffffff;
+            --light-gray: #fef2f2;
+            --medium-gray: #ddd;
+            --dark-gray: #5e5e5e;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .ambulance-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-disabled {
+            background: var(--medium-gray);
+            color: var(--dark-gray);
+            cursor: not-allowed;
+        }
+
+        .emergency-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .emergency-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .emergency-btn {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: var(--light-gray);
+            border: 2px solid var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .emergency-btn:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(183, 28, 28, 0.1);
+        }
+
+        .emergency-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .emergency-steps {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(183, 28, 28, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .emergency-steps.active {
+            display: block;
+        }
+
+        .steps-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--medium-gray);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .map-container {
+            height: 300px;
+            background-color: var(--medium-gray);
+            border-radius: 8px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .status-indicator.warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        @media (max-width: 768px) {
+            .emergency-types {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">Ambulance Tracker</div>
+        <div class="user-info">
+            <span>Normal User</span>
+            <div class="user-icon">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="dashboard-title">Emergency Assistance Dashboard</h1>
+
+        <div class="ambulance-controls">
+            <!-- This button toggles between Book and Track states -->
+            <button id="ambulanceActionBtn" class="btn btn-primary">
+                <i class="fas fa-ambulance"></i>
+                <span>Book Ambulance</span>
+            </button>
+
+            <div id="statusIndicator" class="status-indicator" style="display: none;">
+                <i class="fas fa-info-circle"></i>
+                <span>Ambulance booked! Estimated arrival: 8 minutes</span>
+            </div>
+
+            <div class="map-container" id="mapContainer">
+                <span>Ambulance tracking will appear here when booked</span>
+            </div>
+        </div>
+
+        <div class="emergency-section">
+            <h2 class="section-title">
+                <i class="fas fa-first-aid"></i>
+                Emergency Types
+            </h2>
+
+            <p>Select your emergency type to see immediate first aid steps:</p>
+
+            <div class="emergency-types">
+                <button class="emergency-btn" data-type="heart">
+                    <i class="fas fa-heartbeat"></i>
+                    <div>Heart Attack</div>
+                </button>
+
+                <button class="emergency-btn" data-type="accident">
+                    <i class="fas fa-car-crash"></i>
+                    <div>Road Accident</div>
+                </button>
+
+                <button class="emergency-btn" data-type="breathing">
+                    <i class="fas fa-lungs"></i>
+                    <div>Breathing Difficulty</div>
+                </button>
+
+                <button class="emergency-btn" data-type="bleeding">
+                    <i class="fas fa-tint"></i>
+                    <div>Severe Bleeding</div>
+                </button>
+
+                <button class="emergency-btn" data-type="burn">
+                    <i class="fas fa-fire"></i>
+                    <div>Burns</div>
+                </button>
+
+                <button class="emergency-btn" data-type="fracture">
+                    <i class="fas fa-bone"></i>
+                    <div>Bone Fracture</div>
+                </button>
+            </div>
+
+            <!-- Emergency Steps Containers -->
+            <div id="heartSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-heartbeat"></i>
+                    Heart Attack Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Call emergency services immediately</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Have the person sit down and rest</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Loosen any tight clothing</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">If conscious, give aspirin to chew (if available)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Be prepared to perform CPR if they become unconscious</div>
+                </div>
+            </div>
+
+            <div id="accidentSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-car-crash"></i>
+                    Road Accident Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Ensure your own safety first</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Call emergency services immediately</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Don't move injured persons unless absolutely necessary</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Stop any severe bleeding with clean cloth pressure</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Keep injured persons warm and calm until help arrives</div>
+                </div>
+            </div>
+
+            <div id="breathingSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-lungs"></i>
+                    Breathing Difficulty Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Call emergency services immediately</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Help the person sit upright</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Loosen any tight clothing around neck/chest</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">If asthma, help them use their inhaler</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Stay calm and reassure the person</div>
+                </div>
+            </div>
+
+            <div id="bleedingSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-tint"></i>
+                    Severe Bleeding Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Call emergency services immediately</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Apply direct pressure with clean cloth</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Elevate the injured area if possible</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Don't remove soaked cloth - add more on top</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Keep the person warm and still</div>
+                </div>
+            </div>
+
+            <div id="burnSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-fire"></i>
+                    Burns Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Call emergency services for serious burns</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Cool the burn with cool (not cold) running water</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Remove jewelry or tight items before swelling</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Cover loosely with sterile non-stick dressing</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Don't apply creams or break blisters</div>
+                </div>
+            </div>
+
+            <div id="fractureSteps" class="emergency-steps">
+                <h3 class="steps-title">
+                    <i class="fas fa-bone"></i>
+                    Bone Fracture Emergency Steps
+                </h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Call emergency services immediately</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Don't move the injured area</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Apply ice wrapped in cloth to reduce swelling</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">If open wound, cover with clean dressing</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Keep the person warm and still until help arrives</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between Book and Track ambulance
+        const ambulanceActionBtn = document.getElementById('ambulanceActionBtn');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const mapContainer = document.getElementById('mapContainer');
+
+        let ambulanceBooked = false;
+
+        ambulanceActionBtn.addEventListener('click', function () {
+            if (!ambulanceBooked) {
+                // Book ambulance
+                ambulanceBooked = true;
+                ambulanceBooked = true;
+                this.innerHTML = `<i class="fas fa-ambulance"></i> Track Ambulance`;
+                this.onclick = () => window.location.href = 'map.ejs';
+                this.classList.add('btn-primary');
+
+                this.classList.remove('btn-primary');
+                this.classList.add('btn-secondary');
+
+                // Show status and map
+                statusIndicator.style.display = 'flex';
+                mapContainer.innerHTML = '<div id="map" style="width:100%;height:100%;"></div>';
+                mapContainer.style.background = 'none';
+
+                // Here you would integrate with your actual map API
+                console.log('Ambulance booked - would integrate with map API here');
+            } else {
+                // Track ambulance
+                console.log('Tracking ambulance - would show real-time tracking here');
+            }
+        });
+
+        // Emergency type selection
+        const emergencyBtns = document.querySelectorAll('.emergency-btn');
+        const emergencySteps = document.querySelectorAll('.emergency-steps');
+
+        emergencyBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const emergencyType = this.getAttribute('data-type');
+
+                // Hide all steps first
+                emergencySteps.forEach(step => {
+                    step.classList.remove('active');
+                });
+
+                // Show selected steps
+                document.getElementById(`${emergencyType}Steps`).classList.add('active');
+
+                // Scroll to steps
+                document.getElementById(`${emergencyType}Steps`).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Initialize with first emergency steps shown
+        document.getElementById('heartSteps').classList.add('active');
+    </script>
+</body>
+
+</html>

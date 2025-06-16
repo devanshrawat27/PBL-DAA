@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Ambulance Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #b71c1c;
+            --secondary-color: #d32f2f;
+            --accent-color: #c62828;
+            --light-color: #fff8f8;
+            --text-color: #2c2c2c;
+            --card-bg: #ffffff;
+            --primary-blue: #d32f2f;
+            --dark-blue: #b71c1c;
+            --light-gray: #fef2f2;
+            --medium-gray: #ddd;
+            --dark-gray: #5e5e5e;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .intro-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+
+        .intro-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .intro-section p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .features {
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .login-section {
+            flex: 1;
+            padding: 40px;
+            background: var(--card-bg);
+        }
+
+        .login-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(183, 28, 28, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .login-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--dark-gray);
+        }
+
+        .login-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .user-type-notice {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            font-style: italic;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .intro-section,
+            .login-section {
+                padding: 30px;
+            }
+
+            .intro-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-section,
+            .login-section {
+                padding: 25px;
+            }
+
+            .intro-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .login-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="intro-section">
+            <h1>Ambulance Tracking System</h1>
+            <p>Join us to access emergency services and tracking</p>
+
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-ambulance"></i></div>
+                    <span>Real-time ambulance tracking</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                    <span>Fast emergency response</span>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+                    <span>Secure user accounts</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-section">
+            <h2>User Login</h2>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email">
+                    <div class="error-message" id="email-error">Please enter a valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" placeholder="Enter your password">
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message" id="password-error">Password is required</div>
+                    <div class="error-message" id="login-error">Incorrect email or password</div>
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+
+                <div class="success-message" id="login-success">Login successful! Redirecting...</div>
+                
+                <div class="user-type-notice" id="user-type-notice"></div>
+            </form>
+
+            <div class="login-link">
+                Don't have an account? <a href="signup.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase configuration (must match your signup page config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZBTUa_MVYu57P-hvtWUFB4lby52iGoZE",
+            authDomain: "absh-24bfb.firebaseapp.com",
+            projectId: "absh-24bfb",
+            storageBucket: "absh-24bfb.firebasestorage.app",
+            messagingSenderId: "1010389232161",
+            appId: "1:1010389232161:web:4d6edda99dd0bd378b5160",
+            measurementId: "G-PE6D32YL6G"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const database = firebase.database();
+
+        // Password toggle functionality
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Reset error messages
+            document.getElementById('email-error').style.display = 'none';
+            document.getElementById('password-error').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('login-success').style.display = 'none';
+            document.getElementById('user-type-notice').textContent = '';
+
+            // Get values
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            let isValid = true;
+
+            // Basic validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('email-error').style.display = 'block';
+                isValid = false;
+            }
+
+            if (password.length < 6) {
+                document.getElementById('password-error').style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Firebase authentication
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in
+                    const user = userCredential.user;
+                    
+                    // Check user type in database
+                    return database.ref('users/' + user.uid).once('value')
+                        .then((snapshot) => {
+                            if (snapshot.exists()) {
+                                const userData = snapshot.val();
+                                const userType = userData.userType || 'user';
+                                
+                                // Show user type notice
+                                const noticeElement = document.getElementById('user-type-notice');
+                                if (userType === 'driver') {
+                                    noticeElement.textContent = 'Logging in as ambulance driver...';
+                                    noticeElement.style.color = 'var(--primary-color)';
+                                } else {
+                                    noticeElement.textContent = 'Logging in as normal user...';
+                                    noticeElement.style.color = 'var(--dark-gray)';
+                                }
+                                
+                                document.getElementById('login-success').style.display = 'block';
+                                
+                                // Redirect based on user type
+                                setTimeout(() => {
+                                    if (userType === 'driver') {
+                                        window.location.href = 'driver-dashboard.html';
+                                    } else {
+                                        window.location.href = 'user-dashboard.html';
+                                    }
+                                }, 1500);
+                            } else {
+                                throw new Error('User data not found');
+                            }
+                        });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                    const errorElement = document.getElementById('login-error');
+                    
+                    if (errorCode === 'auth/wrong-password') {
+                        errorElement.textContent = 'Incorrect password. Please try again.';
+                    } else if (errorCode === 'auth/user-not-found') {
+                        errorElement.textContent = 'No account found with this email. Please sign up first.';
+                    } else if (errorCode === 'auth/invalid-email') {
+                        errorElement.textContent = 'Invalid email format.';
+                    } else {
+                        errorElement.textContent = 'Login failed. Please try again.';
+                    }
+
+                    errorElement.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+
+</html>
